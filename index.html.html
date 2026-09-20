@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uma cartinha para você ❤️ </title>
+
+<style>
+/* =========================
+   CONFIGURAÇÕES FÁCEIS
+   ========================= */
+:root {
+  --rosa-fundo: #ff9fbd;
+  --rosa-claro: #ffd8e5;
+  --rosa-forte: #ff4f81;
+  --vermelho: #e83f68;
+  --amarelo-envelope: #ffd447;
+  --amarelo-claro: #ffe98a;
+  --papel: #fffaf0;
+  --texto: #5d3040;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  background:
+    radial-gradient(circle at 20% 20%, #ffc1d3 0 7%, transparent 8%),
+    radial-gradient(circle at 80% 30%, #ffbfd2 0 8%, transparent 9%),
+    linear-gradient(135deg, var(--rosa-fundo), #ffb5ca);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--texto);
+}
+
+/* Corações do fundo */
+.coracoes {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.coracao {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 25px;
+  animation: subir linear infinite;
+}
+
+.coracao:nth-child(1) { left: 8%;  animation-duration: 8s;  animation-delay: 0s; }
+.coracao:nth-child(2) { left: 20%; animation-duration: 11s; animation-delay: 2s; }
+.coracao:nth-child(3) { left: 35%; animation-duration: 9s;  animation-delay: 4s; }
+.coracao:nth-child(4) { left: 52%; animation-duration: 12s; animation-delay: 1s; }
+.coracao:nth-child(5) { left: 68%; animation-duration: 10s; animation-delay: 3s; }
+.coracao:nth-child(6) { left: 82%; animation-duration: 8s;  animation-delay: 5s; }
+.coracao:nth-child(7) { left: 94%; animation-duration: 13s; animation-delay: 2s; }
+
+@keyframes subir {
+  from {
+    transform: translateY(110vh) rotate(0deg);
+    opacity: 0;
+  }
+  15% { opacity: 1; }
+  to {
+    transform: translateY(-15vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Conteúdo */
+.container {
+  width: min(92vw, 850px);
+  min-height: 600px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tela inicial */
+.inicio {
+  text-align: center;
+  transition: 0.7s ease;
+}
+
+.titulo {
+  color: white;
+  font-size: clamp(25px, 5vw, 42px);
+  text-shadow: 0 3px 10px rgba(100, 30, 50, 0.25);
+  margin-bottom: 30px;
+}
+
+.subtitulo {
+  color: white;
+  margin-top: 25px;
+  font-size: 16px;
+  opacity: 0.95;
+}
+
+/* Envelope */
+.envelope {
+  width: min(500px, 82vw);
+  height: 300px;
+  position: relative;
+  cursor: pointer;
+  margin: auto;
+  filter: drop-shadow(0 18px 20px rgba(100, 30, 50, 0.22));
+  transition: transform 0.3s ease;
+}
+
+.envelope:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.envelope-corpo {
+  position: absolute;
+  inset: 40px 0 0;
+  background: var(--amarelo-envelope);
+  border-radius: 8px;
+  border: 3px solid #d9a91c;
+  overflow: hidden;
+}
+
+.envelope-corpo::before,
+.envelope-corpo::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 58%;
+  height: 100%;
+  background: #f5c534;
+}
+
+.envelope-corpo::before {
+  left: -12%;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.envelope-corpo::after {
+  right: -12%;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+/* Aba superior */
+.aba {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: var(--amarelo-claro);
+  border: 3px solid #d9a91c;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  z-index: 3;
+  transform-origin: top center;
+  transition: transform 0.9s ease;
+}
+
+/* Texto */
+.clique {
+  position: absolute;
+  z-index: 5;
+  width: 100%;
+  top: 125px;
+  color: #71394a;
+  font-weight: bold;
+  font-size: 27px;
+  text-shadow: 0 1px 0 white;
+}
+
+.selo {
+  position: absolute;
+  z-index: 6;
+  top: 105px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  transition: 0.5s;
+}
+
+/* Carta */
+.carta-area {
+  display: none;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  animation: aparecer 0.9s ease;
+}
+
+.carta {
+  width: min(760px, 94vw);
+  min-height: 520px;
+  padding: 42px 45px;
+  background:
+    linear-gradient(rgba(255,255,255,.55), rgba(255,255,255,.55)),
+    var(--papel);
+  border-radius: 14px;
+  box-shadow: 0 20px 45px rgba(90, 30, 50, .25);
+  border: 1px solid #f2d6c4;
+  position: relative;
+  transform: rotate(-1deg);
+}
+
+.carta h2 {
+  text-align: center;
+  color: var(--rosa-forte);
+  margin: 0 0 25px;
+  font-size: clamp(25px, 5vw, 38px);
+}
+
+.poema {
+  font-family: Georgia, serif;
+  font-size: clamp(18px, 3vw, 23px);
+  line-height: 1.75;
+  white-space: pre-line;
+  min-height: 210px;
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--rosa-forte);
+  vertical-align: middle;
+  animation: piscar 0.7s infinite;
+}
+
+.ursinho {
+  width: 190px;
+  max-width: 45%;
+  display: block;
+  margin: 10px auto 0;
+  animation: flutuar 2.5s ease-in-out infinite;
+}
+
+.assinatura {
+  text-align: right;
+  font-family: cursive;
+  font-size: 23px;
+  color: var(--rosa-forte);
+  margin-top: 12px;
+  opacity: 0;
+  transition: 1s;
+}
+
+.reiniciar {
+  display: block;
+  margin: 22px auto 0;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 23px;
+  background: var(--rosa-forte);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 7px 15px rgba(200, 50, 90, .25);
+  transition: .25s;
+}
+
+.reiniciar:hover {
+  transform: scale(1.05);
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: scale(.85) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes flutuar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+@keyframes piscar {
+  50% { opacity: 0; }
+}
+
+/* Corações extras quando abre */
+.explosao {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10;
+  font-size: 25px;
+  animation: explodir 1.7s ease-out forwards;
+}
+
+@keyframes explodir {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(.5);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) scale(1.5) rotate(25deg);
+  }
+}
+
+/* Celular */
+@media (max-width: 600px) {
+  .container {
+    min-height: 100vh;
+  }
+
+  .envelope {
+    height: 250px;
+  }
+
+  .carta {
+    min-height: 570px;
+    padding: 30px 24px;
+  }
+
+  .poema {
+    line-height: 1.6;
+  }
+
+  .ursinho {
+    width: 145px;
+    max-width: 50%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Corações do fundo -->
+<div class="coracoes">
+  <span class="coracao">♡</span>
+  <span class="coracao">♥</span>
+  <span class="coracao">♡</span>
+  <span class="coracao">♥</span>
+  <span class="coracao">♡</span>
+  <span class="coracao">♥</span>
+  <span class="coracao">♡</span>
+</div>
+
+<main class="container">
+
+  <!-- PRIMEIRA TELA -->
+  <section class="inicio" id="inicio">
+    <div class="titulo">💌 Uma pequena surpresa para Gege❤️...</div>
+
+    <div class="envelope" onclick="abrirCarta()">
+      <div class="envelope-corpo"></div>
+      <div class="aba" id="aba"></div>
+
+      <div class="selo" id="selo"></div>
+      <div class="clique">Clique aqui ❤️</div>
+    </div>
+
+    <div class="subtitulo">
+      Tem uma cartinha esperando por você... ✨
+    </div>
+  </section>
+
+  <!-- CARTA -->
+  <section class="carta-area" id="cartaArea">
+    <article class="carta">
+      <h2>Para você, com carinho 💕</h2>
+
+      <div class="poema" id="poema"></div>
+
+      <img
+        class="ursinho"
+        src="ursinho.gif"
+        alt="Ursinho segurando um coração"
+      >
+
+      <div class="assinatura" id="assinatura">
+        Com carinho, Alanzinho. ❤️
+      </div>
+
+      <button class="reiniciar" onclick="reiniciar()">
+        💌 Ler novamente
+      </button>
+    </article>
+  </section>
+
+</main>
+
+<script>
+/* ==================================
+   PERSONALIZE SUA CARTINHA AQUI
+   ================================== */
+
+const texto = `Desde que você chegou,
+meu mundo ficou um pouquinho mais bonito.
+
+Seu sorriso tem um jeito especial
+de transformar qualquer momento.
+
+Talvez você nem perceba,
+mas existe alguém aqui
+que sorri só de lembrar de você.
+
+Amo o seu jeitinho, amo seus olhinhos,
+e se eu pudesse passaria horas admirando eles. 
+
+E se eu pudesse escolher
+um lugar para estar agora,
+provavelmente seria perto de você. 
+
+Eu te amo❤️`;
+
+
+/* ==================================
+   NÃO PRECISA EDITAR DAQUI PARA BAIXO
+   ================================== */
+
+let indice = 0;
+
+function abrirCarta() {
+  const inicio = document.getElementById("inicio");
+  const cartaArea = document.getElementById("cartaArea");
+  const aba = document.getElementById("aba");
+  const selo = document.getElementById("selo");
+
+  aba.style.transform = "rotateX(180deg)";
+  selo.style.opacity = "0";
+
+  setTimeout(() => {
+    inicio.style.display = "none";
+    cartaArea.style.display = "flex";
+    iniciarDigitacao();
+    criarCoracoes();
+  }, 650);
+}
+
+function iniciarDigitacao() {
+  const poema = document.getElementById("poema");
+  const assinatura = document.getElementById("assinatura");
+
+  poema.innerHTML = '<span class="cursor"></span>';
+  indice = 0;
+
+  function escrever() {
+    if (indice < texto.length) {
+      const cursor = poema.querySelector(".cursor");
+      cursor.remove();
+
+      poema.innerHTML += texto[indice];
+
+      poema.innerHTML += '<span class="cursor"></span>';
+      indice++;
+
+      setTimeout(escrever, 38);
+    } else {
+      setTimeout(() => {
+        assinatura.style.opacity = "1";
+      }, 700);
+    }
+  }
+
+  setTimeout(escrever, 500);
+}
+
+function criarCoracoes() {
+  const quantidade = 18;
+
+  for (let i = 0; i < quantidade; i++) {
+    const coracao = document.createElement("div");
+
+    coracao.className = "explosao";
+    coracao.textContent = Math.random() > .5 ? "❤️" : "💕";
+
+    coracao.style.left = "50%";
+    coracao.style.top = "50%";
+
+    coracao.style.setProperty(
+      "--x",
+      `${(Math.random() - .5) * 600}px`
+    );
+
+    coracao.style.setProperty(
+      "--y",
+      `${(Math.random() - .5) * 600}px`
+    );
+
+    coracao.style.animationDelay = `${Math.random() * .3}s`;
+
+    document.body.appendChild(coracao);
+
+    setTimeout(() => coracao.remove(), 2200);
+  }
+}
+
+function reiniciar() {
+  const cartaArea = document.getElementById("cartaArea");
+  const inicio = document.getElementById("inicio");
+  const aba = document.getElementById("aba");
+  const selo = document.getElementById("selo");
+  const assinatura = document.getElementById("assinatura");
+
+  cartaArea.style.display = "none";
+  inicio.style.display = "block";
+
+  aba.style.transform = "rotateX(0deg)";
+  selo.style.opacity = "1";
+  assinatura.style.opacity = "0";
+}
+</script>
+
+</body>
+</html>
